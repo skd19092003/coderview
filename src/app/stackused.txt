@@ -1,0 +1,8 @@
+nextjs for project
+clerk for authentication
+convex for database and real time updates
+stream for video calling feature
+shadcnui for ui
+tailwind for css
+svix for webhooks as a service
+can use vantajs for background animation effect (optional)
