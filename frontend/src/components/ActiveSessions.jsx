@@ -31,7 +31,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
         </div>
 
         {/* SESSIONS LIST */}
-        <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 max-h-[420px] overflow-y-auto pr-2">
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
               <LoaderIcon className="size-10 animate-spin text-primary" />
@@ -42,9 +42,9 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                 key={session._id}
                 className="card bg-base-200 border-2 border-base-300 hover:border-primary/50"
               >
-                <div className="flex items-center justify-between gap-4 p-5">
+                <div className="flex flex-col gap-4 p-4 md:p-5">
                   {/* LEFT SIDE */}
-                  <div className="flex items-center gap-4 flex-1">
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
                     <div className="relative size-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                       <Code2Icon className="size-7 text-white" />
                       <div className="absolute -top-1 -right-1 size-4 bg-success rounded-full border-2 border-base-100" />
@@ -67,7 +67,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                         </div>
                         <div className="flex items-center gap-1.5">
                           <MailIcon className="size-4" />
-                          <span className="text-xs truncate max-w-[240px]">
+                          <span className="text-xs truncate max-w-full">
                             Invited user : {session.invitedUser?.email || "Invited user"}
                           </span>
                         </div>
@@ -86,14 +86,16 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                     </div>
                   </div>
 
-                  {session.participant && !isUserInSession(session) ? (
-                    <button className="btn btn-disabled btn-sm">Full</button>
-                  ) : (
-                    <Link to={`/session/${session._id}`} className="btn btn-primary btn-sm gap-2">
-                      {isUserInSession(session) ? "Rejoin" : "Join"}
-                      <ArrowRightIcon className="size-4" />
-                    </Link>
-                  )}
+                  <div className="flex justify-end">
+                    {session.participant && !isUserInSession(session) ? (
+                      <button className="btn btn-disabled btn-sm">Full</button>
+                    ) : (
+                      <Link to={`/session/${session._id}`} className="btn btn-primary btn-sm gap-2">
+                        {isUserInSession(session) ? "Rejoin" : "Join"}
+                        <ArrowRightIcon className="size-4" />
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
             ))

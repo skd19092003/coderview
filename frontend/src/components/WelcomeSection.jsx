@@ -6,8 +6,8 @@ function WelcomeSection({ onCreateSession }) {
 
   return (
     <div className="relative overflow-hidden">
-      <div className="relative max-w-7xl mx-auto px-6 py-16">
-        <div className="flex items-center justify-between">
+      <div className="relative mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 py-16">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -31,7 +31,7 @@ function WelcomeSection({ onCreateSession }) {
           </div>
           <button
             onClick={onCreateSession}
-            className="group px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-2xl transition-all duration-200 hover:opacity-90"
+            className="group self-start px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-2xl transition-all duration-200 hover:opacity-90"
           >
             <div className="flex items-center gap-3 text-white font-bold text-lg">
               <ZapIcon className="w-6 h-6" />

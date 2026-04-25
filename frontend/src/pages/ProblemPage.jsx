@@ -126,9 +126,9 @@ function ProblemPage() {
 
           {/* right panel- code editor & output */}
           <Panel defaultSize={60} minSize={30}>
-            <PanelGroup direction="vertical">
+            <PanelGroup direction="vertical" className="h-full">
               {/* Top panel - Code editor */}
-              <Panel defaultSize={70} minSize={30}>
+              <Panel defaultSize={50} minSize={20}>
                 <CodeEditorPanel
                   selectedLanguage={selectedLanguage}
                   code={code}
@@ -143,7 +143,7 @@ function ProblemPage() {
 
               {/* Bottom panel - Output Panel*/}
 
-              <Panel defaultSize={30} minSize={30}>
+              <Panel defaultSize={50} minSize={35}>
                 <OutputPanel output={output} />
               </Panel>
             </PanelGroup>

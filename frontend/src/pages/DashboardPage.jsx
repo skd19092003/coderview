@@ -60,7 +60,7 @@ function DashboardPage() {
         <WelcomeSection onCreateSession={() => setShowCreateModal(true)} />
 
         {/* Grid layout */}
-        <div className="container mx-auto px-6 pb-16">
+        <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <StatsCards
               activeSessionsCount={activeSessions.length}
