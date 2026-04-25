@@ -166,11 +166,8 @@ function SessionPage() {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h1 className="text-3xl font-bold text-base-content">
-                          {session?.host?.email || "Loading..."}
+                          Host - {session?.host?.email || "Interviewer"}
                         </h1>
-                        <p className="text-base-content/60 mt-1">
-                          Host name: {session?.host?.name || "Loading..."}
-                        </p>
                         <p className="text-base-content/60 mt-1">
                           Invited user email: {session?.invitedUser?.email || "Loading..."}
                         </p>
