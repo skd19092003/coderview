@@ -2,14 +2,33 @@ import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema(
   {
+    problemType: {
+      type: String,
+      enum: ["predefined", "custom"],
+      default: "predefined",
+    },
     problem: {
       type: String,
       required: true,
     },
     difficulty: {
       type: String,
-      enum: ["easy", "medium", "hard"],
+      enum: ["easy", "medium", "hard", "custom"],
       required: true,
+    },
+    customProblem: {
+      title: {
+        type: String,
+        default: "",
+      },
+      statement: {
+        type: String,
+        default: "",
+      },
+      testCases: {
+        type: String,
+        default: "",
+      },
     },
     host: {
       type: mongoose.Schema.Types.ObjectId,

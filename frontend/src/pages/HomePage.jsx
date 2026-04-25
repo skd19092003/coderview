@@ -4,6 +4,8 @@ import {
   ArrowRightIcon,
   CheckIcon,
   Code2Icon,
+  CopyIcon,
+  Link2Icon,
   SparklesIcon,
   UsersIcon,
   VideoIcon,
@@ -14,6 +16,13 @@ import { SignInButton } from "@clerk/clerk-react";
 
 function HomePage() {
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+  const siteUrl = "coderview-3a0a.onrender.com";
+
+  const copySiteLink = async () => {
+    if (!siteUrl) return;
+
+    await navigator.clipboard.writeText(siteUrl);
+  };
 
   return (
     <div className="bg-gradient-to-br from-base-100 via-base-200 to-base-300">
@@ -128,6 +137,30 @@ function HomePage() {
         </div>
       </div>
 
+      {/* SHARE WEBSITE CALL OUT */}
+      <div className="max-w-7xl mx-auto px-4 pb-4">
+        <div className="rounded-3xl border border-primary/20 bg-base-100 shadow-xl p-5 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-1">
+            <p className="text-lg font-bold text-base-content">Share the website with your candidate</p>
+            <p className="text-sm md:text-base text-base-content/70">
+              Send this site link to the invited user, ask them to sign up with the same email, and
+              tell them the session will appear on their dashboard at the scheduled time.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="inline-flex items-center gap-2 rounded-xl bg-base-200 px-3 py-2 border border-base-300 text-sm">
+              <Link2Icon className="size-4 text-primary" />
+              <span className="font-mono">{siteUrl || "Site link unavailable"}</span>
+            </div>
+            <button className="btn btn-primary btn-sm gap-2" onClick={copySiteLink}>
+              <CopyIcon className="size-4" />
+              Copy website link
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* FEATURES SECTION */}
       <div className="max-w-7xl mx-auto px-4 py-20">
         <div className="text-center mb-16">
@@ -204,7 +237,26 @@ function HomePage() {
               </button>
             </div>
 
-            <div className="px-6 py-5 space-y-3 text-base-content/80">
+            <div className="px-6 py-5 space-y-5 text-sm md:text-base text-base-content/80 max-h-[70vh] overflow-y-auto">
+              <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+                <p className="font-semibold text-base-content">Share this website with the candidate</p>
+                <p>
+                  Send this site link to the invited candidate and ask them to sign up using the same
+                  email that was invited. When the host starts the interview, the session will appear
+                  for that email and they can join from the dashboard.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="inline-flex items-center gap-2 rounded-xl bg-base-200 px-3 py-2 border border-base-300 text-sm">
+                    <Link2Icon className="size-4 text-primary" />
+                    <span className="font-mono">{siteUrl || "Site link unavailable"}</span>
+                  </div>
+                  <button className="btn btn-primary btn-sm gap-2" onClick={copySiteLink}>
+                    <CopyIcon className="size-4" />
+                    Copy website link
+                  </button>
+                </div>
+              </div>
+
               <p className="font-semibold">Coderview is used to conduct remote code interviews.</p>
               <p className="font-semibold">💻 Recruiters can use Coderview to assess candidates coding skills in a simulated interview environment which will have a coding editor with the coding question already written and a vscode style editor for running code all while video conferencing and screensharing.</p>
               <p className="font-semibold">➡️ Also can be used by friends/peers to prepare for real life coding interviews</p>
@@ -212,12 +264,12 @@ function HomePage() {
               <p className="font-semibold">🏦 Or simply choose any problems from the problem bank and start practicing on code editor.</p>
 
               <ol className="list-decimal pl-5 space-y-2">
-                <li> SignUp/Login to Coderview.</li>
-                <li> Send the required timings to the candidate through gmail and tell to create account in coderview.</li>
-                <li> On the scheduled day and time, Create a new session.</li>
-                <li> In the session, choose a coding question & the candidate/invited user Email Id.</li>
-                <li> Only invited users will see the session created by host(recruiter) & can join.</li>
-                <li> Conduct the interview with the candidate with coding editor and question available & several options like screenshare, chat panel available.</li>
+                <li>Sign up or log in to Coderview.</li>
+                <li>Copy the website link and share it with the invited candidate.</li>
+                <li>Tell the candidate to sign up with the same email that was invited.</li>
+                <li>On the scheduled day and time, create a new session and invite that email.</li>
+                <li>Only the invited user will see the session and can join it.</li>
+                <li>Conduct the interview using the code editor, video call, chat, and screen sharing.</li>
               </ol>
 
       

@@ -15,7 +15,15 @@ const isAllowedSessionUser = (session, userId) =>
 
 export async function createSession(req, res) {
   try {
-    const { problem, difficulty, inviteeEmail } = req.body;
+    const {
+      problem,
+      difficulty,
+      inviteeEmail,
+      problemType = "predefined",
+      customProblemTitle,
+      customProblemStatement,
+      customProblemTestCases,
+    } = req.body;
     const userId = req.user._id;
     const clerkId = req.user.clerkId;
 
@@ -23,6 +31,12 @@ export async function createSession(req, res) {
       return res
         .status(400)
         .json({ message: "Problem, difficulty, and invitee email are required" });
+    }
+
+    if (problemType === "custom") {
+      if (!customProblemStatement?.trim()) {
+        return res.status(400).json({ message: "Custom problem statement is required" });
+      }
     }
 
     const normalizedInviteeEmail = inviteeEmail.trim().toLowerCase();
@@ -46,6 +60,15 @@ export async function createSession(req, res) {
     const session = await Session.create({
       problem,
       difficulty,
+      problemType,
+      customProblem:
+        problemType === "custom"
+          ? {
+              title: customProblemTitle?.trim() || "Custom Problem",
+              statement: customProblemStatement.trim(),
+              testCases: customProblemTestCases?.trim() || "",
+            }
+          : undefined,
       host: userId,
       invitedUser: invitedUser._id,
       callId,

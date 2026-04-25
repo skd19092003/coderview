@@ -21,7 +21,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
             <div className="p-2 bg-gradient-to-br from-primary to-secondary rounded-xl">
               <ZapIcon className="size-5" />
             </div>
-            <h2 className="text-2xl font-black">Private Sessions</h2>
+            <h2 className="text-2xl font-black">Active 1-to-1 Sessions</h2>
           </div>
 
           <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
               </div>
             ))
           ) : (
-            <div className="text-center py-16">
+            <div className="col-span-full flex min-h-[260px] flex-col items-center justify-center text-center py-16">
               <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl flex items-center justify-center">
                 <SparklesIcon className="w-10 h-10 text-primary/50" />
               </div>

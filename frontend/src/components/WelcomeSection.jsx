@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/clerk-react";
-import { ArrowRightIcon, SparklesIcon, ZapIcon } from "lucide-react";
+import { ArrowRightIcon, BookOpenIcon, SparklesIcon, ZapIcon } from "lucide-react";
 
-function WelcomeSection({ onCreateSession }) {
+function WelcomeSection({ onCreateSession, onOpenInstructions }) {
   const { user } = useUser();
 
   return (
@@ -29,16 +29,26 @@ function WelcomeSection({ onCreateSession }) {
               Ready to conduct an interview? Create a new session and add your candidate as invited user.
             </p>
           </div>
-          <button
-            onClick={onCreateSession}
-            className="group self-start px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-2xl transition-all duration-200 hover:opacity-90"
-          >
-            <div className="flex items-center gap-3 text-white font-bold text-lg">
-              <ZapIcon className="w-6 h-6" />
-              <span>Create Session</span>
-              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </button>
+          <div className="flex flex-wrap items-center gap-3 self-start">
+            <button
+              onClick={onOpenInstructions}
+              className="btn btn-outline btn-sm md:btn-md gap-2 rounded-2xl border-primary/30 hover:border-primary/60 hover:bg-primary/10"
+            >
+              <BookOpenIcon className="size-4" />
+              Instructions
+            </button>
+
+            <button
+              onClick={onCreateSession}
+              className="group px-8 py-4 bg-gradient-to-r from-primary to-secondary rounded-2xl transition-all duration-200 hover:opacity-90"
+            >
+              <div className="flex items-center gap-3 text-white font-bold text-lg">
+                <ZapIcon className="w-6 h-6" />
+                <span>Create Session</span>
+                <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </button>
+          </div>
         </div>
       </div>
     </div>

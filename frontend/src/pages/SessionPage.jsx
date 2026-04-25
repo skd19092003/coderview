@@ -50,6 +50,8 @@ function SessionPage() {
   const problemData = session?.problem
     ? Object.values(PROBLEMS).find((p) => p.title === session.problem)
     : null;
+  const isCustomProblem = session?.problemType === "custom";
+  const customProblem = session?.customProblem || null;
 
   const [selectedLanguage, setSelectedLanguage] = useState("javascript");
   const [code, setCode] = useState(problemData?.starterCode?.[selectedLanguage] || "");
@@ -84,14 +86,26 @@ function SessionPage() {
 
   // update code when problem loads or changes
   useEffect(() => {
+    if (isCustomProblem) {
+      setCode("");
+      return;
+    }
+
     if (problemData?.starterCode?.[selectedLanguage]) {
       setCode(problemData.starterCode[selectedLanguage]);
     }
-  }, [problemData, selectedLanguage]);
+  }, [problemData, selectedLanguage, isCustomProblem]);
 
   const handleLanguageChange = (e) => {
     const newLang = e.target.value;
     setSelectedLanguage(newLang);
+
+    if (isCustomProblem) {
+      setCode("");
+      setOutput(null);
+      return;
+    }
+
     // use problem-specific starter code
     const starterCode = problemData?.starterCode?.[newLang] || "";
     setCode(starterCode);
@@ -197,7 +211,35 @@ function SessionPage() {
 
                   <div className="p-6 space-y-6">
                     {/* problem desc */}
-                    {problemData?.description && (
+                    {isCustomProblem ? (
+                      <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
+                        <h2 className="text-xl font-bold mb-4 text-base-content">
+                          {customProblem?.title || "Custom Problem"}
+                        </h2>
+                        <div className="space-y-4">
+                          <div className="rounded-lg bg-base-200 p-4">
+                            <p className="text-xs uppercase tracking-wide text-base-content/60 mb-2">
+                              Problem Statement
+                            </p>
+                            <pre className="whitespace-pre-wrap break-words text-sm leading-relaxed font-sans text-base-content/90">
+                              {customProblem?.statement || "No custom statement provided."}
+                            </pre>
+                          </div>
+
+                          {customProblem?.testCases && (
+                            <div className="rounded-lg bg-base-200 p-4">
+                              <p className="text-xs uppercase tracking-wide text-base-content/60 mb-2">
+                                Test Cases
+                              </p>
+                              <pre className="whitespace-pre-wrap break-words text-sm leading-relaxed font-mono text-base-content/90">
+                                {customProblem.testCases}
+                              </pre>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ) : (
+                      problemData?.description && (
                       <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
                         <h2 className="text-xl font-bold mb-4 text-base-content">Description</h2>
                         <div className="space-y-3 text-base leading-relaxed">
@@ -209,10 +251,11 @@ function SessionPage() {
                           ))}
                         </div>
                       </div>
+                      )
                     )}
 
                     {/* examples section */}
-                    {problemData?.examples && problemData.examples.length > 0 && (
+                    {!isCustomProblem && problemData?.examples && problemData.examples.length > 0 && (
                       <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
                         <h2 className="text-xl font-bold mb-4 text-base-content">Examples</h2>
 
@@ -252,7 +295,7 @@ function SessionPage() {
                     )}
 
                     {/* Constraints */}
-                    {problemData?.constraints && problemData.constraints.length > 0 && (
+                    {!isCustomProblem && problemData?.constraints && problemData.constraints.length > 0 && (
                       <div className="bg-base-100 rounded-xl shadow-sm p-5 border border-base-300">
                         <h2 className="text-xl font-bold mb-4 text-base-content">Constraints</h2>
                         <ul className="space-y-2 text-base-content/90">
