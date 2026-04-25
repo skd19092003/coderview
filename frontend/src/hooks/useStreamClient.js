@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { StreamChat } from "stream-chat";
 import toast from "react-hot-toast";
 import { initializeStreamClient, disconnectStreamClient } from "../lib/stream";
@@ -10,15 +10,26 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
   const [chatClient, setChatClient] = useState(null);
   const [channel, setChannel] = useState(null);
   const [isInitializingCall, setIsInitializingCall] = useState(true);
+  const initializedCallKeyRef = useRef("");
+  const inFlightCallKeyRef = useRef("");
 
   useEffect(() => {
     let videoCall = null;
     let chatClientInstance = null;
+    let isMounted = true;
+
+    const callKey = session?.callId ? `${session.callId}:${isHost ? "host" : "participant"}` : "";
 
     const initCall = async () => {
       if (!session?.callId) return;
       if (!isHost && !isParticipant) return;
       if (session.status === "completed") return;
+      if (initializedCallKeyRef.current === callKey || inFlightCallKeyRef.current === callKey) {
+        if (isMounted) setIsInitializingCall(false);
+        return;
+      }
+
+      inFlightCallKeyRef.current = callKey;
 
       try {
         const { token, userId, userName, userImage } = await sessionApi.getStreamToken();
@@ -54,11 +65,14 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
         const chatChannel = chatClientInstance.channel("messaging", session.callId);
         await chatChannel.watch();
         setChannel(chatChannel);
+
+        initializedCallKeyRef.current = callKey;
       } catch (error) {
         toast.error("Failed to join video call");
         console.error("Error init call", error);
       } finally {
-        setIsInitializingCall(false);
+        if (isMounted) setIsInitializingCall(false);
+        inFlightCallKeyRef.current = "";
       }
     };
 
@@ -66,18 +80,22 @@ function useStreamClient(session, loadingSession, isHost, isParticipant) {
 
     // cleanup - performance reasons
     return () => {
+      isMounted = false;
       // iife
       (async () => {
         try {
           if (videoCall) await videoCall.leave();
           if (chatClientInstance) await chatClientInstance.disconnectUser();
           await disconnectStreamClient();
+          if (initializedCallKeyRef.current === callKey) {
+            initializedCallKeyRef.current = "";
+          }
         } catch (error) {
           console.error("Cleanup error:", error);
         }
       })();
     };
-  }, [session, loadingSession, isHost, isParticipant]);
+  }, [session?.callId, session?.status, loadingSession, isHost, isParticipant]);
 
   return {
     streamClient,

@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useState } from "react";
 import {
   ArrowRightIcon,
   CheckIcon,
@@ -6,11 +7,14 @@ import {
   SparklesIcon,
   UsersIcon,
   VideoIcon,
+  XIcon,
   ZapIcon,
 } from "lucide-react";
 import { SignInButton } from "@clerk/clerk-react";
 
 function HomePage() {
+  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+
   return (
     <div className="bg-gradient-to-br from-base-100 via-base-200 to-base-300">
       {/* NAVBAR */}
@@ -36,7 +40,7 @@ function HomePage() {
           {/* AUTH BTN */}
           <SignInButton mode="modal">
             <button className="group px-6 py-3 bg-gradient-to-r from-primary to-secondary rounded-xl text-white font-semibold text-sm shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center gap-2">
-              <span>Get Started</span>
+              <span>Profile</span>
               <ArrowRightIcon className="size-4 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </SignInButton>
@@ -87,17 +91,15 @@ function HomePage() {
             <div className="flex flex-wrap gap-4">
               <SignInButton mode="modal">
                 <button className="btn btn-primary btn-lg">
-                  Start Coding Now
+                  Schedule interview
                   <ArrowRightIcon className="size-5" />
                 </button>
               </SignInButton>
 
-              <SignInButton mode="modal">
-              <button className="btn btn-outline btn-lg">
+              <button className="btn btn-outline btn-lg" onClick={() => setIsInstructionsOpen(true)}>
                 <VideoIcon className="size-5" />
-                Watch Demo
+                Instructions (How to use)
               </button>
-              </SignInButton>
             </div>
 
             {/* STATS */}
@@ -119,7 +121,7 @@ function HomePage() {
 
           {/* RIGHT IMAGE */}
           <img
-            src="hero.png"
+            src="coderview_optimized.avif"
             alt="CodeCollab Platform"
             className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transition-transform duration-500"
           />
@@ -179,6 +181,50 @@ function HomePage() {
           </div>
         </div>
       </div>
+
+
+{/* //for instruction button */}
+      {isInstructionsOpen && (
+        <div
+          className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setIsInstructionsOpen(false)}
+        >
+          <div
+            className="w-full max-w-2xl bg-base-100 rounded-2xl shadow-2xl border border-base-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-6 py-4 border-b border-base-300">
+              <h3 className="text-xl font-bold">How To Use CoderView</h3>
+              <button
+                className="btn btn-sm btn-ghost btn-circle"
+                onClick={() => setIsInstructionsOpen(false)}
+                aria-label="Close instructions"
+              >
+                <XIcon className="size-5" />
+              </button>
+            </div>
+
+            <div className="px-6 py-5 space-y-3 text-base-content/80">
+              <p className="font-semibold">Coderview is used to conduct remote code interviews.</p>
+              <p className="font-semibold">💻 Recruiters can use Coderview to assess candidates coding skills in a simulated interview environment which will have a coding editor with the coding question already written and a vscode style editor for running code all while video conferencing and screensharing.</p>
+              <p className="font-semibold">➡️ Also can be used by friends/peers to prepare for real life coding interviews</p>
+              <p className="font-semibold">🔐 1-to-1 end-to-end encryption allowing only the host (recruiter) and invited users to enter the sessions.</p>
+              <p className="font-semibold">🏦 Or simply choose any problems from the problem bank and start practicing on code editor.</p>
+
+              <ol className="list-decimal pl-5 space-y-2">
+                <li> SignUp/Login to Coderview.</li>
+                <li> Send the required timings to the candidate through gmail and tell to create account in coderview.</li>
+                <li> On the scheduled day and time, Create a new session.</li>
+                <li> In the session, choose a coding question & the candidate/invited user Email Id.</li>
+                <li> Only invited users will see the session created by host(recruiter) & can join.</li>
+                <li> Conduct the interview with the candidate with coding editor and question available & several options like screenshare, chat panel available.</li>
+              </ol>
+
+      
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

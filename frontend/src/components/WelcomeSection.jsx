@@ -18,7 +18,7 @@ function WelcomeSection({ onCreateSession }) {
               </h1>
             </div>
             <p className="text-xl text-base-content/60 ml-16">
-              Ready to level up your coding skills?
+              Ready to conduct an interview? Create a new session and add your candidate as invited user!
             </p>
           </div>
           <button

@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { useEndSession, useJoinSession, useSessionById } from "../hooks/useSessions";
 import { PROBLEMS } from "../data/problems";
@@ -21,8 +21,16 @@ function SessionPage() {
   const { user } = useUser();
   const [output, setOutput] = useState(null);
   const [isRunning, setIsRunning] = useState(false);
+  const joinAttemptRef = useRef("");
 
-  const { data: sessionData, isLoading: loadingSession, refetch } = useSessionById(id);
+  const {
+    data: sessionData,
+    isLoading: loadingSession,
+    isError: isSessionError,
+    error: sessionError,
+    refetch,
+  } = useSessionById(id, user?.id);
+
 
   const joinSessionMutation = useJoinSession();
   const endSessionMutation = useEndSession();
@@ -51,10 +59,21 @@ function SessionPage() {
     if (!session || !user || loadingSession) return;
     if (isHost || isParticipant) return;
 
-    joinSessionMutation.mutate(id, { onSuccess: refetch });
+    const attemptKey = `${id}:${user.id}`;
+    if (joinAttemptRef.current === attemptKey) return;
+    joinAttemptRef.current = attemptKey;
+
+    joinSessionMutation.mutate(id, {
+      onSuccess: () => {
+        refetch();
+      },
+      onError: () => {
+        joinAttemptRef.current = "";
+      },
+    });
 
     // remove the joinSessionMutation, refetch from dependencies to avoid infinite loop
-  }, [session, user, loadingSession, isHost, isParticipant, id]);
+  }, [session, user, loadingSession, isHost, isParticipant, id, joinSessionMutation, refetch]);
 
   // redirect the "participant" when session ends
   useEffect(() => {
@@ -95,6 +114,27 @@ function SessionPage() {
     }
   };
 
+  if (isSessionError) {
+    const message = sessionError?.response?.data?.message || "You are not allowed to access this session.";
+
+    return (
+      <div className="h-screen bg-base-100 flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="card bg-base-200 border border-base-300 max-w-lg w-full">
+            <div className="card-body text-center">
+              <h2 className="card-title justify-center text-2xl">Session Access Denied</h2>
+              <p className="text-base-content/70">{message}</p>
+              <div className="card-actions justify-center mt-3">
+                <button className="btn btn-primary" onClick={() => navigate("/dashboard")}>Go to Dashboard</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen bg-base-100 flex flex-col">
       <Navbar />
@@ -112,14 +152,16 @@ function SessionPage() {
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h1 className="text-3xl font-bold text-base-content">
-                          {session?.problem || "Loading..."}
+                          {session?.host?.email || "Loading..."}
                         </h1>
-                        {problemData?.category && (
-                          <p className="text-base-content/60 mt-1">{problemData.category}</p>
-                        )}
-                        <p className="text-base-content/60 mt-2">
-                          Host: {session?.host?.name || "Loading..."} •{" "}
-                          {session?.participant ? 2 : 1}/2 participants
+                        <p className="text-base-content/60 mt-1">
+                          Host name: {session?.host?.name || "Loading..."}
+                        </p>
+                        <p className="text-base-content/60 mt-1">
+                          Invited user email: {session?.invitedUser?.email || "Loading..."}
+                        </p>
+                        <p className="text-base-content/60 mt-1">
+                          Participants: {session?.participant ? 2 : 1}/2
                         </p>
                       </div>
 

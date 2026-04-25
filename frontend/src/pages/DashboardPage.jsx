@@ -14,24 +14,26 @@ function DashboardPage() {
   const navigate = useNavigate();
   const { user } = useUser();
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "" });
+  const [roomConfig, setRoomConfig] = useState({ problem: "", difficulty: "", inviteeEmail: "" });
 
   const createSessionMutation = useCreateSession();
 
-  const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions();
-  const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions();
+  const { data: activeSessionsData, isLoading: loadingActiveSessions } = useActiveSessions(user?.id);
+  const { data: recentSessionsData, isLoading: loadingRecentSessions } = useMyRecentSessions(user?.id);
 
   const handleCreateRoom = () => {
-    if (!roomConfig.problem || !roomConfig.difficulty) return;
+    if (!roomConfig.problem || !roomConfig.difficulty || !roomConfig.inviteeEmail.trim()) return;
 
     createSessionMutation.mutate(
       {
         problem: roomConfig.problem,
         difficulty: roomConfig.difficulty.toLowerCase(),
+        inviteeEmail: roomConfig.inviteeEmail.trim(),
       },
       {
         onSuccess: (data) => {
           setShowCreateModal(false);
+          setRoomConfig({ problem: "", difficulty: "", inviteeEmail: "" });
           navigate(`/session/${data.session._id}`);
         },
       }
@@ -44,7 +46,11 @@ function DashboardPage() {
   const isUserInSession = (session) => {
     if (!user.id) return false;
 
-    return session.host?.clerkId === user.id || session.participant?.clerkId === user.id;
+    return (
+      session.host?.clerkId === user.id ||
+      session.invitedUser?.clerkId === user.id ||
+      session.participant?.clerkId === user.id
+    );
   };
 
   return (

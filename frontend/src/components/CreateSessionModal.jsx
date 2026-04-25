@@ -1,4 +1,4 @@
-import { Code2Icon, LoaderIcon, PlusIcon } from "lucide-react";
+import { Code2Icon, LoaderIcon, MailIcon, PlusIcon } from "lucide-react";
 import { PROBLEMS } from "../data/problems";
 
 function CreateSessionModal({
@@ -34,6 +34,7 @@ function CreateSessionModal({
                 setRoomConfig({
                   difficulty: selectedProblem.difficulty,
                   problem: e.target.value,
+                  inviteeEmail: roomConfig.inviteeEmail,
                 });
               }}
             >
@@ -49,6 +50,29 @@ function CreateSessionModal({
             </select>
           </div>
 
+          <div className="space-y-2">
+            <label className="label">
+              <span className="label-text font-semibold">Invite User Email</span>
+              <span className="label-text-alt text-error">*</span>
+            </label>
+
+            <label className="input input-bordered flex items-center gap-2 w-full">
+              <MailIcon className="size-4 opacity-60" />
+              <input
+                type="email"
+                className="grow"
+                placeholder="registered-user@example.com"
+                value={roomConfig.inviteeEmail}
+                onChange={(e) =>
+                  setRoomConfig({
+                    ...roomConfig,
+                    inviteeEmail: e.target.value,
+                  })
+                }
+              />
+            </label>
+          </div>
+
           {/* ROOM SUMMARY */}
           {roomConfig.problem && (
             <div className="alert alert-success">
@@ -60,6 +84,9 @@ function CreateSessionModal({
                 </p>
                 <p>
                   Max Participants: <span className="font-medium">2 (1-on-1 session)</span>
+                </p>
+                <p>
+                  Invited User: <span className="font-medium">{roomConfig.inviteeEmail || "Not set"}</span>
                 </p>
               </div>
             </div>
@@ -74,7 +101,7 @@ function CreateSessionModal({
           <button
             className="btn btn-primary gap-2"
             onClick={onCreateRoom}
-            disabled={isCreating || !roomConfig.problem}
+            disabled={isCreating || !roomConfig.problem || !roomConfig.inviteeEmail.trim()}
           >
             {isCreating ? (
               <LoaderIcon className="size-5 animate-spin" />
