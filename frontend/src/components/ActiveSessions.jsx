@@ -61,7 +61,9 @@ function ActiveSessions({ sessions, isLoading, isUserInSession }) {
                       <div className="space-y-1 text-sm opacity-80">
                         <div className="flex items-center gap-1.5">
                           <CrownIcon className="size-4" />
-                          <span className="font-medium">Host name: {session.host?.name || "Unknown Host"}</span>
+                          <span className="font-medium">
+                            Host: {session.host?.username || session.host?.email || "Unknown Host"}
+                          </span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <MailIcon className="size-4" />

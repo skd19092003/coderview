@@ -11,14 +11,22 @@ function WelcomeSection({ onCreateSession }) {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <SparklesIcon className="w-6 h-6 text-white" />
+                <img
+                  src="/download.svg"
+                  alt=""
+                  aria-hidden="true"
+                  width="40"
+                  height="40"
+                  decoding="async"
+                  className="size-10 rounded-xl shadow-lg object-cover"
+                />
               </div>
               <h1 className="text-5xl font-black bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
                 Welcome back, {user?.firstName || "there"}!
               </h1>
             </div>
             <p className="text-xl text-base-content/60 ml-16">
-              Ready to conduct an interview? Create a new session and add your candidate as invited user!
+              Ready to conduct an interview? Create a new session and add your candidate as invited user.
             </p>
           </div>
           <button
